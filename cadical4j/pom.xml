@@ -1,0 +1,106 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.github.liveontologies</groupId>
+		<artifactId>cadical4j-parent</artifactId>
+		<version>rel-1.2.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>cadical4j</artifactId>
+
+	<name>Java bindings for the CaDiCal SAT solver</name>
+	<description>Accessing the native CaDiCaL SAT solver throught IPASIR interface and its Java binding</description>
+
+	<properties>
+		<ipasir.artifactId>cadical</ipasir.artifactId>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>ipasir4j-model</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>ipasir4j-jna</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>ipasir4j-tests</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${ipasir.artifactId}</artifactId>
+			<version>${project.version}</version>
+			<type>zip</type>
+			<classifier>${jna.os.prefix}</classifier>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<!-- List all platforms for which native libraries were compiled -->
+		<profile>
+			<id>multi-platform</id>
+			<dependencies>
+				<dependency>
+					<groupId>${project.groupId}</groupId>
+					<artifactId>${ipasir.artifactId}</artifactId>
+					<version>${project.version}</version>
+					<type>zip</type>
+					<classifier>darwin</classifier>
+				</dependency>
+				<dependency>
+					<groupId>${project.groupId}</groupId>
+					<artifactId>${ipasir.artifactId}</artifactId>
+					<version>${project.version}</version>
+					<type>zip</type>
+					<classifier>linux-x86-64</classifier>
+				</dependency>
+				<dependency>
+					<groupId>${project.groupId}</groupId>
+					<artifactId>${ipasir.artifactId}</artifactId>
+					<version>${project.version}</version>
+					<type>zip</type>
+					<classifier>win32-x86-64</classifier>
+				</dependency>
+				<dependency>
+					<groupId>${project.groupId}</groupId>
+					<artifactId>${ipasir.artifactId}</artifactId>
+					<version>${project.version}</version>
+					<type>zip</type>
+					<classifier>win32-x86</classifier>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack-native-libraries</id>
+						<configuration>
+							<includeArtifactIds>${ipasir.artifactId}</includeArtifactIds>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

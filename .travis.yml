@@ -1,0 +1,62 @@
+language: java
+git:
+   depth: 3
+jobs:
+   include:
+   -  stage: native-libs      
+      os: linux
+      dist: trusty
+      jdk: oraclejdk8
+      env: 
+      - DEPLOY=true
+      - OPTIONS='-pl !cadical4j'
+   -  os: linux
+      dist: bionic
+      jdk: oraclejdk11
+      addons:
+         apt:
+            packages: mingw-w64
+      env:
+      - DEPLOY=true      
+      - OPTIONS="-pl !cadical4j -Pi686-w64-mingw32"
+   -  os: linux
+      dist: bionic
+      jdk: oraclejdk11
+      addons:
+         apt:
+            packages: mingw-w64
+      env:
+      env: 
+      - DEPLOY=true
+      - OPTIONS="-pl !cadical4j -Px86_64-w64-mingw32"
+   -  os: osx
+      jdk: oraclejdk11
+      env: 
+      - DEPLOY=true
+      - OPTIONS='-pl !cadical4j'
+      
+   -  stage: multi-platform      
+      os: linux
+      dist: trusty
+      jdk: oraclejdk8
+      env: 
+      - DEPLOY=true
+      - OPTIONS='-Pmulti-platform -pl !cadical'
+   -  os: linux
+      jdk: oraclejdk11
+      env: OPTIONS='-Pmulti-platform -pl !cadical'
+   -  os: linux
+      jdk: oraclejdk13
+      env: OPTIONS='-Pmulti-platform -pl !cadical'
+   -  os: osx
+      jdk: oraclejdk11
+      env: OPTIONS='-Pmulti-platform -pl !cadical' 
+         
+cache:
+   directories:
+   - $HOME/.m2
+before_install: mkdir -p ~/.m2 && cp .settings.xml ~/.m2/settings.xml
+install: mvn install -DskipTests=true -U $OPTIONS
+script: mvn test -Dassembly.skipAssembly=true -B $OPTIONS
+after_success:
+- test "$DEPLOY" = true -a "$TRAVIS_PULL_REQUEST" = false && mvn source:jar deploy -DskipTests=true -B $OPTIONS
