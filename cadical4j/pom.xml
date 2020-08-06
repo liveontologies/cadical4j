@@ -35,7 +35,6 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>${ipasir.artifactId}</artifactId>
 			<version>${project.version}</version>
-			<type>zip</type>
 			<classifier>${jna.os.prefix}</classifier>
 		</dependency>
 		<dependency>
@@ -54,28 +53,24 @@
 					<groupId>${project.groupId}</groupId>
 					<artifactId>${ipasir.artifactId}</artifactId>
 					<version>${project.version}</version>
-					<type>zip</type>
 					<classifier>darwin</classifier>
 				</dependency>
 				<dependency>
 					<groupId>${project.groupId}</groupId>
 					<artifactId>${ipasir.artifactId}</artifactId>
 					<version>${project.version}</version>
-					<type>zip</type>
 					<classifier>linux-x86-64</classifier>
 				</dependency>
 				<dependency>
 					<groupId>${project.groupId}</groupId>
 					<artifactId>${ipasir.artifactId}</artifactId>
 					<version>${project.version}</version>
-					<type>zip</type>
 					<classifier>win32-x86-64</classifier>
 				</dependency>
 				<dependency>
 					<groupId>${project.groupId}</groupId>
 					<artifactId>${ipasir.artifactId}</artifactId>
 					<version>${project.version}</version>
-					<type>zip</type>
 					<classifier>win32-x86</classifier>
 				</dependency>
 			</dependencies>
@@ -84,18 +79,6 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>unpack-native-libraries</id>
-						<configuration>
-							<includeArtifactIds>${ipasir.artifactId}</includeArtifactIds>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
