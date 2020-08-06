@@ -16,7 +16,7 @@ jobs:
             packages: mingw-w64
       env:
       - DEPLOY=true
-      - OPTIONS="-pl -Pi686-w64-mingw32"
+      - OPTIONS="-Pi686-w64-mingw32 -pl !cadical4j"
    -  os: linux
       dist: bionic
       jdk: oraclejdk11
@@ -25,7 +25,7 @@ jobs:
             packages: mingw-w64
       env:
       - DEPLOY=true
-      - OPTIONS="-pl -Px86_64-w64-mingw32"
+      - OPTIONS="-Px86_64-w64-mingw32 -pl !cadical4j"
    -  os: osx
       jdk: oraclejdk11
       env: DEPLOY=true
@@ -49,6 +49,6 @@ cache:
    - $HOME/.m2
 before_install: mkdir -p ~/.m2 && cp .settings.xml ~/.m2/settings.xml
 install: mvn install -DskipTests=true -U $OPTIONS
-script: mvn test -Dassembly.skipAssembly=true -B $OPTIONS
+script: mvn test -Dassembly.skipAssembly=true -B $OPTIONS -pl '!cadical'
 after_success:
 - test "$DEPLOY" = true -a "$TRAVIS_PULL_REQUEST" = false && mvn source:jar deploy -DskipTests=true -B $OPTIONS
