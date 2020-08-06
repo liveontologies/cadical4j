@@ -7,9 +7,7 @@ jobs:
       os: linux
       dist: trusty
       jdk: oraclejdk8
-      env:
-      - DEPLOY=true
-      - OPTIONS='-pl !cadical4j'
+      env: DEPLOY=true
    -  os: linux
       dist: bionic
       jdk: oraclejdk11
@@ -18,7 +16,7 @@ jobs:
             packages: mingw-w64
       env:
       - DEPLOY=true
-      - OPTIONS="-pl !cadical4j -Pi686-w64-mingw32"
+      - OPTIONS="-pl -Pi686-w64-mingw32"
    -  os: linux
       dist: bionic
       jdk: oraclejdk11
@@ -27,28 +25,18 @@ jobs:
             packages: mingw-w64
       env:
       - DEPLOY=true
-      - OPTIONS="-pl !cadical4j -Px86_64-w64-mingw32"
+      - OPTIONS="-pl -Px86_64-w64-mingw32"
    -  os: osx
       jdk: oraclejdk11
-      env:
-      - DEPLOY=true
-      - OPTIONS='-pl !cadical4j'
+      env: DEPLOY=true
    -  stage: multi-platform
       os: linux
-      dist: trusty
-      jdk: oraclejdk8
-      env:
-      - DEPLOY=true
-      - OPTIONS='-Pmulti-platform -pl !cadical'
-   -  os: linux
       jdk: oraclejdk11
-      env: OPTIONS='-Pmulti-platform -pl !cadical'
-   -  os: linux
-      jdk: oraclejdk13
-      env: OPTIONS='-Pmulti-platform -pl !cadical'
+      env: OPTIONS='-Dmulti-platform -pl !cadical'
    -  os: osx
-      jdk: oraclejdk11
-      env: OPTIONS='-Pmulti-platform -pl !cadical'
+      osx_image: xcode9.3
+      jdk: oraclejdk8
+      env: OPTIONS='-Dmulti-platform -pl !cadical'
    -  if: (NOT type IN (pull_request)) AND (branch = master)
       before_install: skip
       install: skip
