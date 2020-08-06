@@ -48,6 +48,12 @@
 		<!-- List all platforms for which native libraries were compiled -->
 		<profile>
 			<id>multi-platform</id>
+			<activation>
+				<!-- in dependent projects can be only activated by a property -->
+				<property>
+					<name>multi-platform</name>
+				</property>
+			</activation>
 			<dependencies>
 				<dependency>
 					<groupId>${project.groupId}</groupId>
