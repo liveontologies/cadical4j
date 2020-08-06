@@ -3,11 +3,11 @@ git:
    depth: 3
 jobs:
    include:
-   -  stage: native-libs      
+   -  stage: native-libs
       os: linux
       dist: trusty
       jdk: oraclejdk8
-      env: 
+      env:
       - DEPLOY=true
       - OPTIONS='-pl !cadical4j'
    -  os: linux
@@ -17,7 +17,7 @@ jobs:
          apt:
             packages: mingw-w64
       env:
-      - DEPLOY=true      
+      - DEPLOY=true
       - OPTIONS="-pl !cadical4j -Pi686-w64-mingw32"
    -  os: linux
       dist: bionic
@@ -26,20 +26,18 @@ jobs:
          apt:
             packages: mingw-w64
       env:
-      env: 
       - DEPLOY=true
       - OPTIONS="-pl !cadical4j -Px86_64-w64-mingw32"
    -  os: osx
       jdk: oraclejdk11
-      env: 
+      env:
       - DEPLOY=true
       - OPTIONS='-pl !cadical4j'
-      
-   -  stage: multi-platform      
+   -  stage: multi-platform
       os: linux
       dist: trusty
       jdk: oraclejdk8
-      env: 
+      env:
       - DEPLOY=true
       - OPTIONS='-Pmulti-platform -pl !cadical'
    -  os: linux
@@ -50,8 +48,14 @@ jobs:
       env: OPTIONS='-Pmulti-platform -pl !cadical'
    -  os: osx
       jdk: oraclejdk11
-      env: OPTIONS='-Pmulti-platform -pl !cadical' 
-         
+      env: OPTIONS='-Pmulti-platform -pl !cadical'
+   -  if: (NOT type IN (pull_request)) AND (branch = master)
+      before_install: skip
+      install: skip
+      script:
+      - |
+         curl -LO --retry 3 https://gist.githubusercontent.com/ykazakov/33a86f5055888342f6a32d829fc02fa9/raw/9681f17d477ea519e3630db69eaed393c0222cce/trigger-appveyor.sh  && sh trigger-appveyor.sh ykazakov cadical4j $APPVEYOR_BEARER_TOKEN
+      after_success: skip
 cache:
    directories:
    - $HOME/.m2
