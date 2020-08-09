@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>cadical4j-parent</artifactId>
-	<version>rel-1.2.1-SNAPSHOT</version>
+	<version>rel-1.2.1.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Configuration settings for the CaDiCaL SAT solver</name>
