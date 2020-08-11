@@ -2,7 +2,7 @@ package com.github.liveontologies.ipasir4j.cadical;
 
 /*-
  * #%L
- * Java Bindings for the Minisat solver
+ * Java bindings for the CaDiCal SAT solver
  * $Id:$
  * $HeadURL:$
  * %%
@@ -23,9 +23,9 @@ package com.github.liveontologies.ipasir4j.cadical;
  */
 
 import com.github.liveontologies.ipasir4j.IpasirSolver;
-import com.github.liveontologies.ipasir4j.testing.IpasirSolverTest;
+import com.github.liveontologies.ipasir4j.testing.IpasirSolverRandomSatTest;
 
-public class CadicalTest extends IpasirSolverTest {
+public class CadicalRandomSatTest extends IpasirSolverRandomSatTest {
 
 	@Override
 	protected IpasirSolver createSolver() {
