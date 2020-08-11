@@ -7,7 +7,7 @@
 	<parent>
 		<artifactId>ipasir4j-build-helper</artifactId>
 		<groupId>com.github.liveontologies</groupId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>cadical4j-parent</artifactId>
