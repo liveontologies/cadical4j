@@ -32,7 +32,9 @@ jobs:
    -  stage: multi-platform
       os: linux
       jdk: oraclejdk11
-      env: OPTIONS='-Dmulti-platform -pl !cadical'
+      env:
+      - OPTIONS='-Dmulti-platform -pl !cadical'
+      - DEPLOY=true
    -  os: osx
       osx_image: xcode9.3
       jdk: oraclejdk8
