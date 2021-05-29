@@ -2,11 +2,11 @@ package com.github.liveontologies.ipasir4j.cadical;
 
 /*-
  * #%L
- * Java Bindings for the Minisat solver
+ * Java bindings for the CaDiCal SAT solver
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2020 Live Ontologies Project
+ * Copyright (C) 2020 - 2021 Live Ontologies Project
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
