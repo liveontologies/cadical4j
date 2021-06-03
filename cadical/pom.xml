@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.github.liveontologies</groupId>
 		<artifactId>cadical4j-parent</artifactId>
-		<version>rel-1.4.1.1-SNAPSHOT</version>
+		<version>rel-1.3.0.1-SNAPSHOT</version>
 	</parent>	
 
 	<artifactId>cadical</artifactId>
