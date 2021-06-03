@@ -56,6 +56,19 @@ endif
 # the location of this makefile (independent of the current directory)
 MROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
+# cross-compilation
+ifneq ($(CHOST),)
+	CROSS_PREFIX = $(CHOST)-
+	CXX := $(CROSS_PREFIX)$(CXX)
+	# prefer -posix version if there are any
+	ifneq ($(shell command -v "$(CXX)-posix"),)
+		CXX := $(CXX)-posix 
+	endif	
+	AR := $(CROSS_PREFIX)$(AR)
+	export SKIP_EXEC=1
+	UNAME := $(shell echo "$(CHOST)" | sed -e 's/^[^-]*-\([^-]*\)\s*$$/\1/' -e 's/^[^-]*-[^-]*-\([^-]*\)\s*$$/\1/' -e 's/^[^-]*-[^-]*-\([^-]*\)-.*$$/\1/')#						
+endif
+
 # determine operating system name
 UNAME ?= $(shell uname -s)
 
@@ -72,6 +85,9 @@ ifeq ($(UNAME), Darwin)
  	AR = libtool -static -o
 else ifeq ($(UNAME), Linux)
  	DLIB = lib$(NAME).so
+else ifeq ($(UNAME), mingw32)
+ 	DLIB = $(NAME).dll
+ 	CXXFLAGS := $(CXXFLAGS) -D_POSIX -D__USE_MINGW_ALARM 
 else
  	$(error Platform not supported: $(UNAME))
 endif 
@@ -86,13 +102,17 @@ lib$(NAME).dylib: $(STATICLIB)
 lib$(NAME).so: $(STATICLIB)
 	$(VB) $(CXX) -o $@ $(IPASIRGLUEOBJ) $^ $(CFLAGS) -g -I. -shared -Wl,-soname,$@ 
 
+# shared library for MinGW
+$(NAME).dll: $(STATICLIB)
+	$(VB) $(CXX) -o $@ $(IPASIRGLUEOBJ) $^ $(CFLAGS) -static-libgcc -static-libstdc++ -g -I. -shared -Wl,--subsystem,windows -Wl,-Bstatic -lstdc++ -lpthread
+
 # static solver library
 $(STATICLIB): $(DIR)
 	@#
 	@# configure and build library
 	@#
 	# patch to use a configurable archive tool
-	$(VB) sed -i.bak -e's/ar rc/$(AR)/' $(DIR)/makefile.in
+	$(VB) sed -i.bak -e's/$$(AR) rc/$$(AR)/' $(DIR)/makefile.in
 	$(VB) cd $(DIR); ./configure && make cadical	
 
 

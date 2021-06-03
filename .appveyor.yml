@@ -9,26 +9,49 @@ environment:
       job_group: jnalib
       appveyor_build_worker_image: Ubuntu  
       DEPLOY: 1
+    - job_name: i686-w64-mingw32
+      job_group: jnalib
+      appveyor_build_worker_image: Ubuntu
+      DEPLOY: 1
+    - job_name: x86_64-w64-mingw32
+      job_group: jnalib
+      appveyor_build_worker_image: Ubuntu
+      DEPLOY: 1      
     - job_name: darwin
       job_group: jnalib
       appveyor_build_worker_image: macos
       DEPLOY: 1    
-    - job_name: java8-linux-x86-64-deploy
-      job_group: java
+    - job_name: java8-win-x86
+      job_group: java-windows
       job_depends_on: jnalib
-      appveyor_build_worker_image: Ubuntu
-      JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64/
-      DEPLOY: 1
+      appveyor_build_worker_image: Visual Studio 2017      
+      JAVA_HOME: C:\Program Files (x86)\Java\jdk1.8.0
+    - job_name: java8-win-x64-deploy
+      job_group: java-windows
+      job_depends_on: jnalib
+      appveyor_build_worker_image: Visual Studio 2017
+      JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+      DEPLOY: 1         
     - job_name: java11-linux-x86-64
-      job_group: java
+      job_group: java-linux
       job_depends_on: jnalib
       appveyor_build_worker_image: Ubuntu2004
       JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64/
     - job_name: java15-linux-x86-64
-      job_group: java
+      job_group: java-linux
       job_depends_on: jnalib
       appveyor_build_worker_image: Ubuntu2004
       JAVA_HOME: /usr/lib/jvm/java-15-openjdk-amd64/
+    - job_name: java11-win-x64
+      job_group: java-windows
+      job_depends_on: jnalib
+      appveyor_build_worker_image: Visual Studio 2017      
+      JAVA_HOME: C:\Program Files\Java\jdk11
+    - job_name: java16-win-x64
+      job_group: java-windows
+      job_depends_on: jnalib
+      appveyor_build_worker_image: Visual Studio 2019      
+      JAVA_HOME: C:\Program Files\Java\jdk16  
   OSSRH_USERNAME:
     secure: 64k8xKR++oDsn//bh82FAg==
   OSSRH_PASSWORD:
@@ -62,7 +85,27 @@ for:
   -
     matrix:
       only:
-        - job_group: java
+        - job_name: i686-w64-mingw32
+        - job_name: x86_64-w64-mingw32
+    environment:
+      compile_options: ${deploy_options}
+    init:
+      - sudo apt-get install mingw-w64 -y -qq
+  -
+    matrix:
+      only:
+        - job_group: java-linux
     environment:
       compile_options: -B -pl !cadical -P multi-platform
       deploy_options: ${compile_options}
+  -
+    matrix:
+      only:
+        - job_group: java-windows
+    environment:
+      compile_options: -B -pl !cadical -P multi-platform
+      deploy_options: ${compile_options}
+    init:
+      - cmd: SET PATH=%JAVA_HOME%\bin;%PATH%    
+    cache:
+      - C:\Users\appveyor\.m2

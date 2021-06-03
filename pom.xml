@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>cadical4j-parent</artifactId>
-	<version>rel-1.4.1.1-SNAPSHOT</version>
+	<version>rel-1.2.1.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Configuration settings for the CaDiCaL SAT solver</name>
@@ -23,9 +23,9 @@
 
 	<properties>
 		<library.name>cadical</library.name>
-		<library.version>rel-1.4.1</library.version>		
-		<library.download.url>https://github.com/arminbiere/cadical/archive/</library.download.url>
-		<library.archive.name>${library.version}</library.archive.name>
+		<library.version>rel-1.2.1</library.version>		
+		<library.download.url>https://github.com/liveontologies/cadical/archive/</library.download.url>
+		<library.archive.name>0f6674c67784d47dccf04dca10976636807702d7</library.archive.name>
 	</properties>
 
 	<url>https://github.com/liveontologies/${project.artifactId}</url>

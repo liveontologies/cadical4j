@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.github.liveontologies</groupId>
 		<artifactId>cadical4j-parent</artifactId>
-		<version>rel-1.4.1.1-SNAPSHOT</version>
+		<version>rel-1.2.1.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>cadical4j</artifactId>
@@ -68,6 +68,20 @@
 					<artifactId>${ipasir.artifactId}</artifactId>
 					<version>${project.version}</version>
 					<classifier>linux-x86-64</classifier>
+					<scope>provided</scope>
+				</dependency>
+				<dependency>
+					<groupId>${project.groupId}</groupId>
+					<artifactId>${ipasir.artifactId}</artifactId>
+					<version>${project.version}</version>
+					<classifier>win32-x86-64</classifier>
+					<scope>provided</scope>
+				</dependency>
+				<dependency>
+					<groupId>${project.groupId}</groupId>
+					<artifactId>${ipasir.artifactId}</artifactId>
+					<version>${project.version}</version>
+					<classifier>win32-x86</classifier>
 					<scope>provided</scope>
 				</dependency>
 			</dependencies>
