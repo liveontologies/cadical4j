@@ -36,6 +36,7 @@
 			<artifactId>${ipasir.artifactId}</artifactId>
 			<version>${project.version}</version>
 			<classifier>${jna.os.prefix}</classifier>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -60,12 +61,14 @@
 					<artifactId>${ipasir.artifactId}</artifactId>
 					<version>${project.version}</version>
 					<classifier>darwin</classifier>
+					<scope>provided</scope>
 				</dependency>
 				<dependency>
 					<groupId>${project.groupId}</groupId>
 					<artifactId>${ipasir.artifactId}</artifactId>
 					<version>${project.version}</version>
 					<classifier>linux-x86-64</classifier>
+					<scope>provided</scope>
 				</dependency>
 			</dependencies>
 		</profile>
