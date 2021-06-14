@@ -30,7 +30,7 @@ endif
 export AR		?= ar
 # to build universal binary on MacOS, we switch ar rc -> -static -o  
 AR += rc
-export CXXFLAGS	+= -Wall -DNDEBUG -O3 -fPIC
+export CXXFLAGS	+= -Wall -DNDEBUG -O3 -fPIC -DQUIET
 
 #-----------------------------------------------------------------------#
 #- REQUIRED TOP RULES --------------------------------------------------#
