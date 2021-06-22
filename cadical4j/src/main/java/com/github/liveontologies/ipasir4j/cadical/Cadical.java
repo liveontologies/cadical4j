@@ -32,6 +32,16 @@ public class Cadical {
 	private final static JNAIpasir CADICAL_JNA = Native.load("cadical",
 			JNAIpasir.class);
 
+	/**
+	 * @return the name and the version of the incremental SAT solving library
+	 */
+	public static String getSignature() {
+		return CADICAL_JNA.ipasir_signature();
+	}
+	
+	/**
+	 * @return a new solver instance
+	 */
 	public static IpasirSolver createSolver() {
 		return new IpasirNativeSolver(CADICAL_JNA);
 	}
