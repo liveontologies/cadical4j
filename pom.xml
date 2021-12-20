@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>cadical4j-parent</artifactId>
-	<version>rel-1.4.1.1-SNAPSHOT</version>
+	<version>rel-1.5.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Configuration settings for the CaDiCaL SAT solver</name>
@@ -23,7 +23,7 @@
 
 	<properties>
 		<library.name>cadical</library.name>
-		<library.version>rel-1.4.1</library.version>		
+		<library.version>rel-1.5.0</library.version>		
 		<library.download.url>https://github.com/arminbiere/cadical/archive/</library.download.url>
 		<library.archive.name>${library.version}</library.archive.name>
 	</properties>
