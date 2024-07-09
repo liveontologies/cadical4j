@@ -60,7 +60,7 @@ MROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 UNAME ?= $(shell uname -s)
 
 # the build glue object file implementing the ipasir interface
-IPASIRGLUEOBJ=$(DIR)/build/ipasir.o
+IPASIRGLUEOBJ=$(DIR)/build/src/ipasir.o
 # the static library of the solver, including the ipasir code
 STATICLIB=$(DIR)/build/libcadical.a
 
