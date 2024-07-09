@@ -29,10 +29,6 @@ environment:
       job_depends_on: jnalib
       appveyor_build_worker_image: Ubuntu2004
       JAVA_HOME: /usr/lib/jvm/java-15-openjdk-amd64/
-  OSSRH_USERNAME:
-    secure: 64k8xKR++oDsn//bh82FAg==
-  OSSRH_PASSWORD:
-    secure: zcn8sBdPWDa/IVJr+uwUYDkH0YXufEkx9TZendXeu1Y=
 matrix:
   fast_finish: true
 install:
