@@ -22,13 +22,13 @@ environment:
     - job_name: java11-linux-x86-64
       job_group: java
       job_depends_on: jnalib
-      appveyor_build_worker_image: Ubuntu2004
+      appveyor_build_worker_image: Ubuntu2204
       JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64/
-    - job_name: java15-linux-x86-64
+    - job_name: java21-linux-x86-64
       job_group: java
       job_depends_on: jnalib
-      appveyor_build_worker_image: Ubuntu2004
-      JAVA_HOME: /usr/lib/jvm/java-15-openjdk-amd64/
+      appveyor_build_worker_image: Ubuntu2204
+      JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64/
 matrix:
   fast_finish: true
 install:
