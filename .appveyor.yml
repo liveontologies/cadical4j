@@ -1,28 +1,45 @@
 version: '{build}'
 clone_depth: 3
+image:
+  - Visual Studio 2019
 environment:
   JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
   compile_options: -B -P ${job_name}
   deploy_options: -B -pl !cadical4j -P ${job_name}  
-  matrix:
+  matrix:    
     - job_name: linux-x86-64
       job_group: jnalib
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004  
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004      
+      DEPLOY: 1
+    - job_name: x86_64-w64-mingw32
+      job_group: jnalib
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
+      DEPLOY: 1
+    - job_name: i686-w64-mingw32
+      job_group: jnalib
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
       DEPLOY: 1
     - job_name: darwin
       job_group: jnalib
       APPVEYOR_BUILD_WORKER_IMAGE: macos
-      DEPLOY: 1    
-    - job_name: java8-linux-x86-64-deploy
-      job_group: java
-      job_depends_on: jnalib
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
       DEPLOY: 1
-    - job_name: java11-linux-x86-64
+    - job_name: java8-win-x64-deploy
       job_group: java
       job_depends_on: jnalib
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
-      JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
+      JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+      DEPLOY: 1
+    - job_name: java8-win-x86
+      job_group: java
+      job_depends_on: jnalib      
+      JAVA_HOME: C:\Program Files (x86)\Java\jdk1.8.0
+    - job_name: java11-win-x64
+      job_group: java
+      job_depends_on: jnalib      
+      JAVA_HOME: C:\Program Files\Java\jdk11
+    - job_name: java17-win-x64
+      job_group: java
+      job_depends_on: jnalib      
+      JAVA_HOME: C:\Program Files\Java\jdk17
     - job_name: java21-linux-x86-64
       job_group: java
       job_depends_on: jnalib
@@ -41,7 +58,7 @@ test_script:
 deploy_script:
   - bash -c "if [ ${DEPLOY} ]; then mvn source:jar deploy -DskipTests=true ${deploy_options}; fi" 
 cache:
-  - $HOME/.m2/    
+  - $HOME/.m2/
 for:
   -
     matrix:
@@ -55,9 +72,24 @@ for:
       - brew install maven wget
       - sudo mv /Library/Developer/CommandLineTools/SDKs /tmp/
   -
+    matrix:     
+      only:
+        - job_name: i686-w64-mingw32
+        - job_name: x86_64-w64-mingw32
+    environment:
+      compile_options: ${deploy_options}
+    init:
+      - sudo apt-get update -qq
+      - sudo apt-get install mingw-w64 wine -y -qq      
+      - echo ':DOSWin:M::MZ::/usr/bin/wine:' | sudo tee /proc/sys/fs/binfmt_misc/register
+  -
     matrix:
       only:
         - job_group: java
     environment:
       compile_options: -B -pl !cadical -P multi-platform
       deploy_options: ${compile_options}
+    init:
+      - cmd: SET PATH=%JAVA_HOME%\bin;%PATH%
+    cache:
+      - C:\Users\appveyor\.m2
