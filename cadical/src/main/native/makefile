@@ -53,13 +53,22 @@ else
 VB=
 endif
 
-# the location of this makefile (independent of the current directory)
-MROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+# cross-compilation
+ifeq ($(CHOST),)
+else
+	CROSS_PREFIX = $(CHOST)-
+	CXX := $(CROSS_PREFIX)$(CXX)
+	AR := $(CROSS_PREFIX)$(AR)
+	UNAME = $(shell echo "$(CHOST)" | sed -e 's/^[^-]*-\([^-]*\)\s*$$/\1/' -e 's/^[^-]*-[^-]*-\([^-]*\)\s*$$/\1/' -e 's/^[^-]*-[^-]*-\([^-]*\)-.*$$/\1/')
+endif
 
 # determine operating system name
 UNAME ?= $(shell uname -s)
 
-# the build glue object file implementing the ipasir interface
+# the location of this makefile (independent of the current directory)
+MROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
+# the built glue object file implementing the ipasir interface
 IPASIRGLUEOBJ=$(DIR)/build/src/ipasir.o
 # the static library of the solver, including the ipasir code
 STATICLIB=$(DIR)/build/libcadical.a
@@ -67,11 +76,16 @@ STATICLIB=$(DIR)/build/libcadical.a
 ifeq ($(UNAME), Darwin)
  	DLIB = lib$(NAME).dylib
  	# build universal "fat" binaries
- 	CFLAGS += -arch x86_64 -arch arm64
  	CXXFLAGS += -arch x86_64 -arch arm64
  	AR = libtool -static -o
 else ifeq ($(UNAME), Linux)
  	DLIB = lib$(NAME).so
+else ifeq ($(UNAME), mingw32)
+ 	DLIB = $(NAME).dll
+	# TODO: move these options to LDFLAGS once they are supported
+	# https://github.com/arminbiere/cadical/pull/88
+	CXXFLAGS += -static-libgcc -static-libstdc++
+	LIBS += -lpsapi
 else
  	$(error Platform not supported: $(UNAME))
 endif 
@@ -79,22 +93,25 @@ endif
 dlib: $(DLIB)
 
 # shared library for Mac OS
-lib$(NAME).dylib: $(STATICLIB)
-	$(VB) $(CXX) $(CFLAGS) -g -I. -o $@ $(IPASIRGLUEOBJ) $^ -dynamiclib -install_name $@ 
+lib$(NAME).dylib: $(IPASIRGLUEOBJ) $(STATICLIB)
+	$(VB) $(CXX) $(CXXFLAGS) -dynamiclib -o $@ $^ -install_name $@ $(LIBS)
 
 # shared library for Linux
-lib$(NAME).so: $(STATICLIB)
-	$(VB) $(CXX) -o $@ $(IPASIRGLUEOBJ) $^ $(CFLAGS) -g -I. -shared -Wl,-soname,$@ 
+lib$(NAME).so: $(IPASIRGLUEOBJ) $(STATICLIB)
+	$(VB) $(CXX) $(CXXFLAGS) -shared -o $@ $^ -Wl,-soname,$@ $(LIBS)
+
+# shared library for MinGW
+$(NAME).dll: $(IPASIRGLUEOBJ) $(STATICLIB)
+	$(VB) $(CXX) $(CXXFLAGS) -shared -o $@ $^ -Wl,--subsystem,windows $(LIBS)
 
 # static solver library
-$(STATICLIB): $(DIR)
+$(IPASIRGLUEOBJ) $(STATICLIB): $(DIR)
 	@#
 	@# configure and build library
 	@#
 	# patch to use a configurable archive tool
 	$(VB) sed -i.bak -e's/ar rc/$(AR)/' $(DIR)/makefile.in
-	$(VB) cd $(DIR); ./configure && make cadical	
-
+	$(VB) cd $(DIR); ./configure $(LIBS) && make cadical
 
 $(DIR): $(ARCHIVE).tar.gz
 	@#
