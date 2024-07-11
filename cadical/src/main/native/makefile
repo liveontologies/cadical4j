@@ -53,11 +53,20 @@ else
 VB=
 endif
 
-# the location of this makefile (independent of the current directory)
-MROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+# cross-compilation
+ifeq ($(CHOST),)
+else
+	CROSS_PREFIX = $(CHOST)-
+	CXX := $(CROSS_PREFIX)$(CXX)
+	AR := $(CROSS_PREFIX)$(AR)
+	UNAME = $(shell echo "$(CHOST)" | sed -e 's/^[^-]*-\([^-]*\)\s*$$/\1/' -e 's/^[^-]*-[^-]*-\([^-]*\)\s*$$/\1/' -e 's/^[^-]*-[^-]*-\([^-]*\)-.*$$/\1/')
+endif
 
 # determine operating system name
 UNAME ?= $(shell uname -s)
+
+# the location of this makefile (independent of the current directory)
+MROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 # the build glue object file implementing the ipasir interface
 IPASIRGLUEOBJ=$(DIR)/build/src/ipasir.o
@@ -67,11 +76,14 @@ STATICLIB=$(DIR)/build/libcadical.a
 ifeq ($(UNAME), Darwin)
  	DLIB = lib$(NAME).dylib
  	# build universal "fat" binaries
- 	CFLAGS += -arch x86_64 -arch arm64
  	CXXFLAGS += -arch x86_64 -arch arm64
  	AR = libtool -static -o
 else ifeq ($(UNAME), Linux)
  	DLIB = lib$(NAME).so
+else ifeq ($(UNAME), mingw32)
+ 	DLIB = $(NAME).dll
+	CXXFLAGS += -static-libgcc -static-libstdc++
+	LIBS += -lpsapi
 else
  	$(error Platform not supported: $(UNAME))
 endif 
@@ -80,11 +92,15 @@ dlib: $(DLIB)
 
 # shared library for Mac OS
 lib$(NAME).dylib: $(STATICLIB)
-	$(VB) $(CXX) $(CFLAGS) -g -I. -o $@ $(IPASIRGLUEOBJ) $^ -dynamiclib -install_name $@ 
+	$(VB) $(CXX) $(CXXFLAGS) -dynamiclib -install_name $@ $(IPASIRGLUEOBJ) $^ -o $@ $(LIBS)
 
 # shared library for Linux
 lib$(NAME).so: $(STATICLIB)
-	$(VB) $(CXX) -o $@ $(IPASIRGLUEOBJ) $^ $(CFLAGS) -g -I. -shared -Wl,-soname,$@ 
+	$(VB) $(CXX) $(CXXFLAGS) -shared -Wl,-soname,$@ $(IPASIRGLUEOBJ) $^ -o $@ $(LIBS)
+
+# shared library for MinGW
+$(NAME).dll: $(STATICLIB)	
+	$(VB) $(CXX) $(CXXFLAGS) -shared -Wl,--subsystem,windows $(IPASIRGLUEOBJ) $^ -o $@ $(LIBS)
 
 # static solver library
 $(STATICLIB): $(DIR)
@@ -93,7 +109,7 @@ $(STATICLIB): $(DIR)
 	@#
 	# patch to use a configurable archive tool
 	$(VB) sed -i.bak -e's/ar rc/$(AR)/' $(DIR)/makefile.in
-	$(VB) cd $(DIR); ./configure && make cadical	
+	$(VB) cd $(DIR); ./configure $(LIBS) && make cadical	
 
 
 $(DIR): $(ARCHIVE).tar.gz
