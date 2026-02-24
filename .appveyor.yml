@@ -36,6 +36,8 @@ environment:
       job_group: java
       job_depends_on: jnalib      
       JAVA_HOME: C:\Program Files\Java\jdk11
+      # Workaround for JDK-8213202
+      MAVEN_OPTS: -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2
     - job_name: java17-win-x64
       job_group: java
       job_depends_on: jnalib      
