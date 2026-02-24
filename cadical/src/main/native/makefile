@@ -31,6 +31,7 @@ export AR		?= ar
 # to build universal binary on MacOS, we switch ar rc -> -static -o  
 AR += rc
 export CXXFLAGS	+= -Wall -DNDEBUG -O3 -fPIC -DQUIET
+export CFLAGS	+= -Wall -DNDEBUG -O3 -fPIC -DQUIET
 
 #-----------------------------------------------------------------------#
 #- REQUIRED TOP RULES --------------------------------------------------#
@@ -77,6 +78,7 @@ ifeq ($(UNAME), Darwin)
  	DLIB = lib$(NAME).dylib
  	# build universal "fat" binaries
  	CXXFLAGS += -arch x86_64 -arch arm64
+ 	CFLAGS += -arch x86_64 -arch arm64
  	AR = libtool -static -o
 else ifeq ($(UNAME), Linux)
  	DLIB = lib$(NAME).so
@@ -85,10 +87,14 @@ else ifeq ($(UNAME), mingw32)
 	# TODO: move these options to LDFLAGS once they are supported
 	# https://github.com/arminbiere/cadical/pull/88
 	CXXFLAGS += -static-libgcc -static-libstdc++
+	CFLAGS += -static-libgcc -static-libstdc++
 	LIBS += -lpsapi
 else
  	$(error Platform not supported: $(UNAME))
 endif 
+
+# configure script of cadical does not append space
+CFLAGS +=  
 
 dlib: $(DLIB)
 
