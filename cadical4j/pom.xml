@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.github.liveontologies</groupId>
+		<groupId>io.github.liveontologies</groupId>
 		<artifactId>cadical4j-parent</artifactId>
 		<version>rel-1.4.1.1-SNAPSHOT</version>
 	</parent>

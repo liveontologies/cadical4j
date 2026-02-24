@@ -6,7 +6,7 @@
 
 	<parent>
 		<artifactId>ipasir4j-build-helper</artifactId>
-		<groupId>com.github.liveontologies</groupId>
+		<groupId>io.github.liveontologies</groupId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
