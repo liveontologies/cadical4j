@@ -93,9 +93,6 @@ else
  	$(error Platform not supported: $(UNAME))
 endif 
 
-# configure script of cadical does not append space
-CFLAGS +=  
-
 dlib: $(DLIB)
 
 # shared library for Mac OS
